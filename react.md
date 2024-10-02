@@ -5,62 +5,65 @@
 Explain as much of this component as you can. Use line numbers and technical terms.
 
 ```js
-import axios from 'axios'
-import { useState, useEffect } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
 
-import Reviews from './Reviews'
+const WeatherApp = () => {
+  const [city, setCity] = useState('London');
+  const [weather, setWeather] = useState(null);
 
-const API = process.env.REACT_APP_API_URL
+  const API_KEY = 'YOUR_API_KEY_HERE'; // Replace with a real API key
 
-function BookmarkDetails() {
-  const { id } = useParams()
-  const [bookmark, setBookmark] = useState([])
-  const navigate = useNavigate()
+  const fetchWeather = async () => {
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
+      );
+      const data = await response.json();
+      setWeather(data);
+    } catch (err) {
+      console.error("Failed to fetch weather data:", err);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setCity(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    fetchWeather();
+  };
 
   useEffect(() => {
-    axios
-      .get(`${API}/bookmarks/${id}`)
-      .then((response) => {
-        setBookmark(response.data)
-      })
-      .catch((c) => {
-        console.warn('catch', c)
-      })
-  }, [id])
+    fetchWeather();
+  }, []); // Empty dependency array means this effect runs once on mount
 
   return (
-    <>
-      <article>
-        {bookmark.is_favorite ? <span>⭐️</span> : null} {bookmark.name}
-        <h5>
-          <span>
-            <a href={bookmark.url}>{bookmark.name}</a>
-          </span>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {bookmark.url}
-        </h5>
-        <h6>{bookmark.category}</h6>
-        <p>{bookmark.description}</p>
-        <div className="showNavigation">
-          <>
-            <Link to={`/bookmarks`}>
-              <button>Back</button>
-            </Link>
-          </>
-          <>
-            <Link to={`/bookmarks/${bookmark.id}/edit`}>
-              <button>Edit</button>
-            </Link>
-          </>
-          <>
-            <button onClick={handleDelete}>Delete</button>
-          </>
-        </div>
-      </article>
-      <Reviews />
-    </>
-  )
-}
+    <div>
+      <h1>Weather App</h1>
+      
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={city}
+          onChange={handleInputChange}
+          placeholder="Enter city name"
+        />
+        <button type="submit">Get Weather</button>
+      </form>
 
-export default BookmarkDetails
+      {weather && (
+        <div>
+          <h2>{weather.name}, {weather.sys.country}</h2>
+          <p>Temperature: {weather.main.temp}°C</p>
+          <p>Weather: {weather.weather[0].description}</p>
+          <p>Humidity: {weather.main.humidity}%</p>
+          <p>Wind Speed: {weather.wind.speed} m/s</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default WeatherApp;
 ```
