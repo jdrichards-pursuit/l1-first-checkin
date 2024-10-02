@@ -1,10 +1,8 @@
-# ExpressJS
+/*
+Explain as much of this route as you can. 
+Use line numbers and technical terms.
+*/
 
-## Instructions
-
-Explain as much of this route as you can. Use line numbers and technical terms.
-
-```js
 const express = require('express')
 const bookmarks = express.Router()
 
@@ -18,4 +16,4 @@ bookmarks.get('/:id', async (req, res) => {
     res.status(404).json({ error: 'not found' })
   }
 })
-```
+

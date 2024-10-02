@@ -1,10 +1,3 @@
-# React
-
-## Instructions
-
-Explain as much of this component as you can. Use line numbers and technical terms.
-
-```js
 import React, { useState, useEffect } from 'react';
 
 const WeatherApp = () => {
@@ -36,7 +29,7 @@ const WeatherApp = () => {
 
   useEffect(() => {
     fetchWeather();
-  }, []); // Empty dependency array means this effect runs once on mount
+  }, []); 
 
   return (
     <div>
@@ -66,4 +59,4 @@ const WeatherApp = () => {
 };
 
 export default WeatherApp;
-```
+
